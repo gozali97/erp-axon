@@ -1,0 +1,590 @@
+// Foreign-key registry mirroring the Postgres schema, used to resolve
+// PostgREST-style resource embedding (e.g. `products(sku, name)`).
+
+export type Fk = {
+  name: string;
+  fromTable: string; // table that holds the FK column
+  toTable: string; // referenced table
+  column: string; // FK column on fromTable
+  refColumn: string; // PK column on toTable (always "id" here)
+};
+
+export const FKS: Fk[] = [
+  {
+    name: "branches_company_id_fkey",
+    fromTable: "branches",
+    toTable: "companies",
+    column: "company_id",
+    refColumn: "id",
+  },
+  {
+    name: "warehouses_company_id_fkey",
+    fromTable: "warehouses",
+    toTable: "companies",
+    column: "company_id",
+    refColumn: "id",
+  },
+  {
+    name: "warehouses_branch_id_fkey",
+    fromTable: "warehouses",
+    toTable: "branches",
+    column: "branch_id",
+    refColumn: "id",
+  },
+  {
+    name: "profiles_active_company_id_fkey",
+    fromTable: "profiles",
+    toTable: "companies",
+    column: "active_company_id",
+    refColumn: "id",
+  },
+  {
+    name: "user_roles_company_id_fkey",
+    fromTable: "user_roles",
+    toTable: "companies",
+    column: "company_id",
+    refColumn: "id",
+  },
+  {
+    name: "uwa_warehouse_id_fkey",
+    fromTable: "user_warehouse_access",
+    toTable: "warehouses",
+    column: "warehouse_id",
+    refColumn: "id",
+  },
+  {
+    name: "units_company_id_fkey",
+    fromTable: "units",
+    toTable: "companies",
+    column: "company_id",
+    refColumn: "id",
+  },
+  {
+    name: "unit_conversions_from_fkey",
+    fromTable: "unit_conversions",
+    toTable: "units",
+    column: "from_unit_id",
+    refColumn: "id",
+  },
+  {
+    name: "unit_conversions_to_fkey",
+    fromTable: "unit_conversions",
+    toTable: "units",
+    column: "to_unit_id",
+    refColumn: "id",
+  },
+  {
+    name: "categories_company_id_fkey",
+    fromTable: "categories",
+    toTable: "companies",
+    column: "company_id",
+    refColumn: "id",
+  },
+  {
+    name: "categories_parent_id_fkey",
+    fromTable: "categories",
+    toTable: "categories",
+    column: "parent_id",
+    refColumn: "id",
+  },
+  {
+    name: "products_company_id_fkey",
+    fromTable: "products",
+    toTable: "companies",
+    column: "company_id",
+    refColumn: "id",
+  },
+  {
+    name: "products_category_id_fkey",
+    fromTable: "products",
+    toTable: "categories",
+    column: "category_id",
+    refColumn: "id",
+  },
+  {
+    name: "products_base_unit_id_fkey",
+    fromTable: "products",
+    toTable: "units",
+    column: "base_unit_id",
+    refColumn: "id",
+  },
+  {
+    name: "product_units_product_id_fkey",
+    fromTable: "product_units",
+    toTable: "products",
+    column: "product_id",
+    refColumn: "id",
+  },
+  {
+    name: "product_units_unit_id_fkey",
+    fromTable: "product_units",
+    toTable: "units",
+    column: "unit_id",
+    refColumn: "id",
+  },
+  {
+    name: "stock_balances_product_id_fkey",
+    fromTable: "stock_balances",
+    toTable: "products",
+    column: "product_id",
+    refColumn: "id",
+  },
+  {
+    name: "stock_balances_warehouse_id_fkey",
+    fromTable: "stock_balances",
+    toTable: "warehouses",
+    column: "warehouse_id",
+    refColumn: "id",
+  },
+  {
+    name: "stock_movements_product_id_fkey",
+    fromTable: "stock_movements",
+    toTable: "products",
+    column: "product_id",
+    refColumn: "id",
+  },
+  {
+    name: "stock_movements_warehouse_id_fkey",
+    fromTable: "stock_movements",
+    toTable: "warehouses",
+    column: "warehouse_id",
+    refColumn: "id",
+  },
+  {
+    name: "stock_movements_counterparty_wh_fkey",
+    fromTable: "stock_movements",
+    toTable: "warehouses",
+    column: "counterparty_warehouse_id",
+    refColumn: "id",
+  },
+  {
+    name: "stock_movements_unit_id_fkey",
+    fromTable: "stock_movements",
+    toTable: "units",
+    column: "unit_id",
+    refColumn: "id",
+  },
+  {
+    name: "stock_cost_layers_movement_id_fkey",
+    fromTable: "stock_cost_layers",
+    toTable: "stock_movements",
+    column: "movement_id",
+    refColumn: "id",
+  },
+  {
+    name: "suppliers_company_id_fkey",
+    fromTable: "suppliers",
+    toTable: "companies",
+    column: "company_id",
+    refColumn: "id",
+  },
+  {
+    name: "purchase_orders_supplier_id_fkey",
+    fromTable: "purchase_orders",
+    toTable: "suppliers",
+    column: "supplier_id",
+    refColumn: "id",
+  },
+  {
+    name: "purchase_orders_warehouse_id_fkey",
+    fromTable: "purchase_orders",
+    toTable: "warehouses",
+    column: "warehouse_id",
+    refColumn: "id",
+  },
+  {
+    name: "purchase_order_lines_po_id_fkey",
+    fromTable: "purchase_order_lines",
+    toTable: "purchase_orders",
+    column: "purchase_order_id",
+    refColumn: "id",
+  },
+  {
+    name: "purchase_order_lines_product_id_fkey",
+    fromTable: "purchase_order_lines",
+    toTable: "products",
+    column: "product_id",
+    refColumn: "id",
+  },
+  {
+    name: "goods_receipts_po_id_fkey",
+    fromTable: "goods_receipts",
+    toTable: "purchase_orders",
+    column: "purchase_order_id",
+    refColumn: "id",
+  },
+  {
+    name: "goods_receipts_supplier_id_fkey",
+    fromTable: "goods_receipts",
+    toTable: "suppliers",
+    column: "supplier_id",
+    refColumn: "id",
+  },
+  {
+    name: "goods_receipts_warehouse_id_fkey",
+    fromTable: "goods_receipts",
+    toTable: "warehouses",
+    column: "warehouse_id",
+    refColumn: "id",
+  },
+  {
+    name: "goods_receipt_lines_gr_id_fkey",
+    fromTable: "goods_receipt_lines",
+    toTable: "goods_receipts",
+    column: "goods_receipt_id",
+    refColumn: "id",
+  },
+  {
+    name: "goods_receipt_lines_product_id_fkey",
+    fromTable: "goods_receipt_lines",
+    toTable: "products",
+    column: "product_id",
+    refColumn: "id",
+  },
+  {
+    name: "customers_company_id_fkey",
+    fromTable: "customers",
+    toTable: "companies",
+    column: "company_id",
+    refColumn: "id",
+  },
+  {
+    name: "sales_orders_customer_id_fkey",
+    fromTable: "sales_orders",
+    toTable: "customers",
+    column: "customer_id",
+    refColumn: "id",
+  },
+  {
+    name: "sales_orders_warehouse_id_fkey",
+    fromTable: "sales_orders",
+    toTable: "warehouses",
+    column: "warehouse_id",
+    refColumn: "id",
+  },
+  {
+    name: "sales_order_lines_so_id_fkey",
+    fromTable: "sales_order_lines",
+    toTable: "sales_orders",
+    column: "sales_order_id",
+    refColumn: "id",
+  },
+  {
+    name: "sales_order_lines_product_id_fkey",
+    fromTable: "sales_order_lines",
+    toTable: "products",
+    column: "product_id",
+    refColumn: "id",
+  },
+  {
+    name: "delivery_orders_so_id_fkey",
+    fromTable: "delivery_orders",
+    toTable: "sales_orders",
+    column: "sales_order_id",
+    refColumn: "id",
+  },
+  {
+    name: "delivery_orders_customer_id_fkey",
+    fromTable: "delivery_orders",
+    toTable: "customers",
+    column: "customer_id",
+    refColumn: "id",
+  },
+  {
+    name: "delivery_orders_warehouse_id_fkey",
+    fromTable: "delivery_orders",
+    toTable: "warehouses",
+    column: "warehouse_id",
+    refColumn: "id",
+  },
+  {
+    name: "delivery_order_lines_do_id_fkey",
+    fromTable: "delivery_order_lines",
+    toTable: "delivery_orders",
+    column: "delivery_order_id",
+    refColumn: "id",
+  },
+  {
+    name: "delivery_order_lines_product_id_fkey",
+    fromTable: "delivery_order_lines",
+    toTable: "products",
+    column: "product_id",
+    refColumn: "id",
+  },
+  {
+    name: "customer_invoices_so_id_fkey",
+    fromTable: "customer_invoices",
+    toTable: "sales_orders",
+    column: "sales_order_id",
+    refColumn: "id",
+  },
+  {
+    name: "customer_invoices_customer_id_fkey",
+    fromTable: "customer_invoices",
+    toTable: "customers",
+    column: "customer_id",
+    refColumn: "id",
+  },
+  {
+    name: "customer_invoice_lines_invoice_id_fkey",
+    fromTable: "customer_invoice_lines",
+    toTable: "customer_invoices",
+    column: "invoice_id",
+    refColumn: "id",
+  },
+  {
+    name: "customer_invoice_lines_product_id_fkey",
+    fromTable: "customer_invoice_lines",
+    toTable: "products",
+    column: "product_id",
+    refColumn: "id",
+  },
+  {
+    name: "accounts_company_id_fkey",
+    fromTable: "accounts",
+    toTable: "companies",
+    column: "company_id",
+    refColumn: "id",
+  },
+  {
+    name: "accounts_parent_id_fkey",
+    fromTable: "accounts",
+    toTable: "accounts",
+    column: "parent_id",
+    refColumn: "id",
+  },
+  {
+    name: "journal_lines_je_id_fkey",
+    fromTable: "journal_lines",
+    toTable: "journal_entries",
+    column: "journal_entry_id",
+    refColumn: "id",
+  },
+  {
+    name: "journal_lines_account_id_fkey",
+    fromTable: "journal_lines",
+    toTable: "accounts",
+    column: "account_id",
+    refColumn: "id",
+  },
+  {
+    name: "pos_payments_invoice_id_fkey",
+    fromTable: "pos_payments",
+    toTable: "customer_invoices",
+    column: "invoice_id",
+    refColumn: "id",
+  },
+  {
+    name: "pos_payments_cash_account_fkey",
+    fromTable: "pos_payments",
+    toTable: "accounts",
+    column: "cash_account_id",
+    refColumn: "id",
+  },
+  {
+    name: "pos_payments_je_fkey",
+    fromTable: "pos_payments",
+    toTable: "journal_entries",
+    column: "journal_entry_id",
+    refColumn: "id",
+  },
+  {
+    name: "positions_department_id_fkey",
+    fromTable: "positions",
+    toTable: "departments",
+    column: "department_id",
+    refColumn: "id",
+  },
+  {
+    name: "employees_department_id_fkey",
+    fromTable: "employees",
+    toTable: "departments",
+    column: "department_id",
+    refColumn: "id",
+  },
+  {
+    name: "employees_position_id_fkey",
+    fromTable: "employees",
+    toTable: "positions",
+    column: "position_id",
+    refColumn: "id",
+  },
+  {
+    name: "employees_manager_id_fkey",
+    fromTable: "employees",
+    toTable: "employees",
+    column: "manager_id",
+    refColumn: "id",
+  },
+  {
+    name: "attendances_employee_id_fkey",
+    fromTable: "attendances",
+    toTable: "employees",
+    column: "employee_id",
+    refColumn: "id",
+  },
+  {
+    name: "leave_requests_employee_id_fkey",
+    fromTable: "leave_requests",
+    toTable: "employees",
+    column: "employee_id",
+    refColumn: "id",
+  },
+  {
+    name: "payroll_runs_je_fkey",
+    fromTable: "payroll_runs",
+    toTable: "journal_entries",
+    column: "journal_entry_id",
+    refColumn: "id",
+  },
+  {
+    name: "payroll_lines_run_id_fkey",
+    fromTable: "payroll_lines",
+    toTable: "payroll_runs",
+    column: "payroll_run_id",
+    refColumn: "id",
+  },
+  {
+    name: "payroll_lines_employee_id_fkey",
+    fromTable: "payroll_lines",
+    toTable: "employees",
+    column: "employee_id",
+    refColumn: "id",
+  },
+  {
+    name: "boms_product_id_fkey",
+    fromTable: "bills_of_materials",
+    toTable: "products",
+    column: "product_id",
+    refColumn: "id",
+  },
+  {
+    name: "bom_components_bom_id_fkey",
+    fromTable: "bom_components",
+    toTable: "bills_of_materials",
+    column: "bom_id",
+    refColumn: "id",
+  },
+  {
+    name: "bom_components_component_fkey",
+    fromTable: "bom_components",
+    toTable: "products",
+    column: "component_product_id",
+    refColumn: "id",
+  },
+  {
+    name: "work_orders_bom_id_fkey",
+    fromTable: "work_orders",
+    toTable: "bills_of_materials",
+    column: "bom_id",
+    refColumn: "id",
+  },
+  {
+    name: "work_orders_product_id_fkey",
+    fromTable: "work_orders",
+    toTable: "products",
+    column: "product_id",
+    refColumn: "id",
+  },
+  {
+    name: "work_orders_warehouse_id_fkey",
+    fromTable: "work_orders",
+    toTable: "warehouses",
+    column: "warehouse_id",
+    refColumn: "id",
+  },
+  {
+    name: "woc_wo_id_fkey",
+    fromTable: "work_order_components",
+    toTable: "work_orders",
+    column: "work_order_id",
+    refColumn: "id",
+  },
+  {
+    name: "woc_component_fkey",
+    fromTable: "work_order_components",
+    toTable: "products",
+    column: "component_product_id",
+    refColumn: "id",
+  },
+  {
+    name: "leads_converted_customer_fkey",
+    fromTable: "leads",
+    toTable: "customers",
+    column: "converted_customer_id",
+    refColumn: "id",
+  },
+  {
+    name: "opportunities_customer_id_fkey",
+    fromTable: "opportunities",
+    toTable: "customers",
+    column: "customer_id",
+    refColumn: "id",
+  },
+  {
+    name: "opportunities_lead_id_fkey",
+    fromTable: "opportunities",
+    toTable: "leads",
+    column: "lead_id",
+    refColumn: "id",
+  },
+  {
+    name: "crm_activities_lead_id_fkey",
+    fromTable: "crm_activities",
+    toTable: "leads",
+    column: "lead_id",
+    refColumn: "id",
+  },
+  {
+    name: "crm_activities_opp_id_fkey",
+    fromTable: "crm_activities",
+    toTable: "opportunities",
+    column: "opportunity_id",
+    refColumn: "id",
+  },
+  {
+    name: "crm_activities_customer_id_fkey",
+    fromTable: "crm_activities",
+    toTable: "customers",
+    column: "customer_id",
+    refColumn: "id",
+  },
+  {
+    name: "cms_posts_author_fkey",
+    fromTable: "cms_posts",
+    toTable: "auth_users",
+    column: "author_id",
+    refColumn: "id",
+  },
+];
+
+export type ResolvedFk = {
+  fk: Fk;
+  // "to-one": the parent row holds the FK column -> embed single child object.
+  // "to-many": the child row holds a FK column pointing to parent -> embed array.
+  cardinality: "to-one" | "to-many";
+};
+
+export function resolveRelation(
+  parentTable: string,
+  childTable: string,
+  hint?: string,
+): ResolvedFk | null {
+  // parent -> child
+  const parentHasFk = FKS.filter((f) => f.fromTable === parentTable && f.toTable === childTable);
+  const childHasFk = FKS.filter((f) => f.fromTable === childTable && f.toTable === parentTable);
+
+  const candidates: ResolvedFk[] = [
+    ...parentHasFk.map((fk) => ({ fk, cardinality: "to-one" as const })),
+    ...childHasFk.map((fk) => ({ fk, cardinality: "to-many" as const })),
+  ];
+
+  if (candidates.length === 0) return null;
+
+  if (hint) {
+    const byHint = candidates.find((c) => c.fk.name === hint);
+    if (byHint) return byHint;
+    // hint may be a disambiguation like "!inner" handled by caller; fall through
+  }
+  return candidates[0];
+}
